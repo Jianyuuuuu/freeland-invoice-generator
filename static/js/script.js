@@ -14,9 +14,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // 设置默认的Bill From值
-    const defaultBillFrom = "Freeland Media Limited";
-    const defaultAddressFrom = "Address：UNIT 1603, 16TH FLOOR, THE L.\nPLAZA 367 - 375 QUEEN'S ROAD\nCENTRAL SHEUNG WAN\nHONG KONG";
-    const defaultLogoPath = "/static/uploads/logo_68d8aa16-dab3-4263-bcd2-5efe021a5416.png";
+    // const defaultBillFrom = "Freeland Media Limited";
+    // const defaultAddressFrom = "UNIT 1603, 16TH FLOOR, THE L.\nPLAZA 367 - 375 QUEEN'S ROAD\nCENTRAL SHEUNG WAN\nHONG KONG";
+    // const defaultLogoPath = "/static/uploads/logo_68d8aa16-dab3-4263-bcd2-5efe021a5416.png";
     
     // 设置默认值
     document.getElementById('bill-from').value = defaultBillFrom;
