@@ -608,7 +608,7 @@ def generate_pdf():
         buffer.seek(0)
         
         # Generate unique filename
-        filename = f"{document_type}_{invoice_number}_{uuid.uuid4()}.pdf"
+        filename = f"{document_type}_{invoice_number}.pdf"
         
         # Save PDF to temporary file
         temp_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
