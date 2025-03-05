@@ -16,11 +16,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // 设置默认的Bill From值
     // const defaultBillFrom = "Freeland Media Limited";
     // const defaultAddressFrom = "UNIT 1603, 16TH FLOOR, THE L.\nPLAZA 367 - 375 QUEEN'S ROAD\nCENTRAL SHEUNG WAN\nHONG KONG";
-    // const defaultLogoPath = "/static/uploads/logo_68d8aa16-dab3-4263-bcd2-5efe021a5416.png";
+    const defaultLogoPath = "/static/uploads/logo_68d8aa16-dab3-4263-bcd2-5efe021a5416.png";
     
     // 设置默认值
-    document.getElementById('bill-from').value = defaultBillFrom;
-    document.getElementById('address-from').value = defaultAddressFrom;
+    // document.getElementById('bill-from').value = defaultBillFrom;
+    // document.getElementById('address-from').value = defaultAddressFrom;
     
     // 设置默认Logo
     if (defaultLogoPath) {
@@ -172,8 +172,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const price = parseFloat(row.querySelector('.item-price').value) || 0;
         const amount = quantity * price;
         
+        // 获取当前货币符号
+        const currencySymbol = {
+            'USD': '$',
+            'HKD': '$',
+            'CNY': '¥'
+        }[currencySelect.value] || '$';
+        
         // 格式化金额显示，与PDF输出一致
-        row.querySelector('.item-amount').textContent = '$' + amount.toFixed(2);
+        row.querySelector('.item-amount').textContent = currencySymbol + amount.toFixed(2);
         
         updateTotals();
     }
@@ -283,7 +290,8 @@ document.addEventListener('DOMContentLoaded', function() {
             show_notes: showNotesCheckbox.checked,
             notes: document.getElementById('notes').value,
             items: [],
-            action: action // 添加action参数，告诉后端是预览还是下载
+            action: action, // 添加action参数，告诉后端是预览还是下载
+            currency: currencySelect.value // 选择货币符号
         };
         
         // Collect items data
@@ -339,4 +347,34 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Failed to generate PDF, please try again');
         });
     }
+
+    // 货币选择逻辑
+    const currencySelect = document.getElementById('currency');
+    const totalCurrency = document.getElementById('total-currency');
+    const selectedCurrency = document.getElementById('selected-currency');
+
+    currencySelect.addEventListener('change', function() {
+        const currency = currencySelect.value;
+        totalCurrency.textContent = currency;
+        selectedCurrency.textContent = currency;
+        
+        // 更新货币符号
+        const currencySymbol = {
+            'USD': '$',
+            'HKD': '$',
+            'CNY': '¥'
+        }[currency] || '$';
+        
+        // 更新金额显示的货币符号
+        const itemAmounts = document.querySelectorAll('.item-amount');
+        itemAmounts.forEach(amount => {
+            const value = parseFloat(amount.textContent.replace(/[^0-9.-]+/g, "")) || 0;
+            amount.textContent = currencySymbol + value.toFixed(2);
+        });
+        
+        // 更新总计部分的货币符号
+        document.getElementById('subtotal').textContent = currencySymbol + parseFloat(document.getElementById('subtotal').textContent.replace(/[^0-9.-]+/g, "")).toFixed(2);
+        document.getElementById('tax-amount').textContent = currencySymbol + parseFloat(document.getElementById('tax-amount').textContent.replace(/[^0-9.-]+/g, "")).toFixed(2);
+        document.getElementById('total-amount').textContent = currencySymbol + parseFloat(document.getElementById('total-amount').textContent.replace(/[^0-9.-]+/g, "")).toFixed(2);
+    });
 }); 

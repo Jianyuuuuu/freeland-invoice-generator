@@ -263,7 +263,15 @@ def generate_pdf():
         show_notes = data.get('show_notes', True)
         notes = data.get('notes', '')
         items = data.get('items', [])
+        currency = data.get('currency', 'USD')  # 获取货币信息
         
+        # 获取货币符号
+        currency_symbol = {
+            'USD': '$',
+            'HKD': '$',
+            'CNY': '¥'
+        }.get(currency, '$')
+
         # Create PDF buffer
         buffer = io.BytesIO()
         
@@ -370,6 +378,11 @@ def generate_pdf():
                           f"{date_label}: {invoice_date}", 
                           default_font, 10, TITLE_SPACING)
         
+        currency_label = "Currency" 
+        draw_spaced_string(c, margin, height - margin - 2.5 * cm, 
+                          f"{currency_label}: {currency}", 
+                          default_font, 10, TITLE_SPACING)
+        
         # 水平分隔线 - 调整位置
         c.setStrokeColor(colors.lightgrey)
         c.setLineWidth(0.5)
@@ -448,8 +461,8 @@ def generate_pdf():
                 table_data.append([
                     name, 
                     str(quantity), 
-                    f"${price:.2f}", 
-                    f"${amount:.2f}"
+                    f"{currency_symbol}{price:.2f}", 
+                    f"{currency_symbol}{amount:.2f}"
                 ])
             
             # Calculate subtotal
@@ -498,7 +511,7 @@ def generate_pdf():
             # 添加小计、税费和总计 - 使用右对齐且有字符间距的函数
             draw_right_aligned_spaced_string(
                 c, width - margin, totals_y_pos, 
-                f"Subtotal: ${subtotal:.2f}", 
+                f"Subtotal: {currency_symbol}{subtotal:.2f}", 
                 default_font, 10, TITLE_SPACING
             )
             
@@ -506,16 +519,18 @@ def generate_pdf():
                 totals_y_pos -= 0.5 * cm
                 draw_right_aligned_spaced_string(
                     c, width - margin, totals_y_pos, 
-                    f"Tax ({tax_rate}%): ${tax_amount:.2f}", 
+                    f"Tax ({tax_rate}%): {currency_symbol}{tax_amount:.2f}", 
                     default_font, 10, TITLE_SPACING
                 )
             
             totals_y_pos -= 0.7 * cm
             draw_right_aligned_spaced_string(
                 c, width - margin, totals_y_pos, 
-                f"Total: ${total:.2f}", 
+                f"Total ({currency}): {currency_symbol}{total:.2f}", 
                 default_bold_font, 11, TITLE_SPACING
             )
+            
+
             
             # 计算备注部分的位置
             notes_y_pos = totals_y_pos - 2 * cm
