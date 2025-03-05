@@ -1,0 +1,6 @@
+Flask==2.3.3
+reportlab==4.0.4
+Pillow==10.0.0
+python-dotenv==1.0.0
+WTForms==3.0.1
+Flask-WTF==1.1.1 

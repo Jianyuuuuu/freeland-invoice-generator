@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Invoice Generator</h1>
+        </header>
+        
+        <main>
+            <div class="invoice-form">
+                <div class="form-section">
+                    <div class="logo-section">
+                        <div class="logo-container" id="logo-preview">
+                            <p>Logo here<br>Click or drag<br>to select file<br>(120 x 120)</p>
+                        </div>
+                        <input type="file" id="logo-upload" accept="image/*" style="display: none;">
+                        <input type="hidden" id="logo-path" name="logo_path">
+                    </div>
+                    
+                    <div class="invoice-header">
+                        <h2 id="document-title">Invoice</h2>
+                        <div class="form-group">
+                            <label for="invoice-number">Invoice No #</label>
+                            <input type="text" id="invoice-number" name="invoice_number" placeholder="Add invoice number">
+                        </div>
+                        <div class="form-group">
+                            <label for="invoice-date">Invoice Date</label>
+                            <input type="text" id="invoice-date" name="invoice_date" class="date-picker" placeholder="Invoice Date">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group col-half">
+                        <label for="bill-from">Bill From:</label>
+                        <input type="text" id="bill-from" name="bill_from" placeholder="Your Company">
+                        <textarea id="address-from" name="address_from" placeholder="Address"></textarea>
+                    </div>
+                    
+                    <div class="form-group col-half">
+                        <label for="bill-to">Bill To:</label>
+                        <input type="text" id="bill-to" name="bill_to" placeholder="Client Name">
+                        <textarea id="address-to" name="address_to" placeholder="Address"></textarea>
+                    </div>
+                </div>
+                
+                <div class="items-section">
+                    <h3>Items</h3>
+                    <table id="items-table">
+                        <thead>
+                            <tr>
+                                <th class="item-col">Item</th>
+                                <th class="qty-col">Quantity</th>
+                                <th class="price-col">Price</th>
+                                <th class="amount-col">Amount</th>
+                                <th class="action-col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="item-row">
+                                <td><input type="text" class="item-name" placeholder="Item name"></td>
+                                <td class="qty-col"><input type="number" class="item-qty" value="0" min="0"></td>
+                                <td class="price-col"><input type="number" class="item-price" value="0" min="0" step="0.01"></td>
+                                <td class="item-amount">$0.00</td>
+                                <td><button type="button" class="remove-item">×</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button type="button" id="add-item">Add Item</button>
+                </div>
+                
+                <div class="totals-section">
+                    <div class="totals">
+                        <div class="total-row">
+                            <span>Subtotal</span>
+                            <span id="subtotal">$0.00</span>
+                        </div>
+                        <div class="total-row">
+                            <span>Tax <input type="number" id="tax-rate" min="0" max="100" value="0" step="0.1">%</span>
+                            <span id="tax-amount">$0.00</span>
+                        </div>
+                        <div class="total-row total">
+                            <span>Total</span>
+                            <span id="total-amount">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="notes-section">
+                    <h3>Notes</h3>
+                    <textarea id="notes" name="notes" placeholder="Add notes..."></textarea>
+                </div>
+            </div>
+            
+            <div class="settings-panel">
+                <h3>Settings</h3>
+                <div class="setting">
+                    <label for="document-type">Document Type</label>
+                    <select id="document-type">
+                        <option value="invoice">Invoice</option>
+                        <option value="receipt">Receipt</option>
+                    </select>
+                </div>
+                <div class="setting">
+                    <label for="show-tax">Show Tax</label>
+                    <label class="switch">
+                        <input type="checkbox" id="show-tax" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="setting">
+                    <label for="show-notes">Show Notes</label>
+                    <label class="switch">
+                        <input type="checkbox" id="show-notes" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                
+                <div class="action-buttons">
+                    <button type="button" id="preview-btn">Preview</button>
+                    <button type="button" id="download-btn">Download</button>
+                </div>
+            </div>
+        </main>
+        
+        <div id="preview-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Invoice Preview</h2>
+                <iframe id="pdf-preview" width="100%" height="500px"></iframe>
+            </div>
+        </div>
+        
+        <div id="loading-overlay">
+            <div class="spinner"></div>
+            <p>Generating invoice...</p>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html> 
